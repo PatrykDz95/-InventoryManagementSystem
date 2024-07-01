@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: my_database
+      POSTGRES_USER: gorm
+      POSTGRES_PASSWORD: gorm
+    ports:
+      - "9920:5432"
