@@ -1,6 +1,4 @@
-package model
-
-import "gorsk/server/database"
+package product_entity
 
 type Product struct {
 	ID          uint    `gorm:"primary_key"`
@@ -9,9 +7,4 @@ type Product struct {
 	Price       float32 `gorm:"column:price"`
 	Quantity    int     `gorm:"column:quantity"`
 	CompanyID   uint    `gorm:"column:company_id"`
-}
-
-func AddProduct(product *Product) error {
-	db := database.GetDB()
-	return db.Create(product).Error
 }

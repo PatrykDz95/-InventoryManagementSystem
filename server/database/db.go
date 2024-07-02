@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorsk/server/company/company_entite"
+	"gorsk/server/product/product_entity"
 )
 
 var DB *gorm.DB
@@ -23,6 +25,18 @@ func Init(dbName string) {
 
 	if !rows.Next() {
 		db.Exec(fmt.Sprintf("CREATE DATABASE %s;", dbName))
+	}
+
+	// AutoMigrate the Product struct
+	err = db.AutoMigrate(&product_entity.Product{})
+	if err != nil {
+		panic("Failed to migrate database!")
+	}
+
+	// AutoMigrate the Company struct
+	err = db.AutoMigrate(&company_entite.Company{})
+	if err != nil {
+		panic("Failed to migrate database!")
 	}
 
 	sqlDB, err := db.DB()
