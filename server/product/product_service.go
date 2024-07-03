@@ -64,11 +64,6 @@ func UpdateProduct(c *gin.Context) {
 func DeleteProduct(c *gin.Context) {
 	db := database.GetDB()
 	var product product_entity.Product
-	//result := db.First(&product, c.Param("id"))
-	//if result.Error != nil {
-	//	c.JSON(http.StatusNotFound, gin.H{"errorMessage": result.Error.Error()})
-	//	return
-	//}
 	deleted := db.Clauses(clause.Returning{}).Where("id = ?", c.Param("id")).Delete(&product)
 	if deleted.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": deleted.Error.Error()})
