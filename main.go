@@ -14,8 +14,13 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	// User routes
-	v1.POST("/product/", product.AddProduct)
-	v1.POST("/company/", company.AddCompany)
+	v1.POST("/product", product.AddProduct)
+	v1.GET("/products", product.GetAllProducts)
+	v1.GET("/product/:id", product.GetProductById)
+	v1.PUT("/product/:id", product.UpdateProduct)
+	v1.DELETE("/product/:id", product.DeleteProduct)
+
+	v1.POST("/company", company.AddCompany)
 
 	err := router.Run("localhost:8080")
 	if err != nil {
