@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 	"gorsk/server/company"
 	"gorsk/server/database"
 	"gorsk/server/product"
@@ -10,6 +11,7 @@ import (
 func main() {
 	router := gin.Default()
 	database.Init("my_database")
+	router.Use(cors.Default())
 
 	v1 := router.Group("/api/v1")
 
@@ -21,6 +23,8 @@ func main() {
 	v1.DELETE("/product/:id", product.DeleteProduct)
 
 	v1.POST("/company", company.AddCompany)
+	v1.GET("/companies", company.GetAllCompanies)
+	v1.GET("/companies/products", company.GetCompaniesWithProducts)
 
 	err := router.Run("localhost:8080")
 	if err != nil {

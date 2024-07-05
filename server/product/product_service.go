@@ -21,7 +21,7 @@ func AddProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": created.Error.Error()})
 		return
 	}
-	sendResponse(c, created, http.StatusOK)
+	sendResponse(c, created)
 }
 
 func GetAllProducts(c *gin.Context) {
@@ -32,7 +32,7 @@ func GetAllProducts(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
 		return
 	}
-	sendResponse(c, found, http.StatusOK)
+	sendResponse(c, found)
 }
 
 func GetProductById(c *gin.Context) {
@@ -43,7 +43,7 @@ func GetProductById(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
 		return
 	}
-	sendResponse(c, found, http.StatusOK)
+	sendResponse(c, found)
 }
 
 func UpdateProduct(c *gin.Context) {
@@ -58,7 +58,7 @@ func UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": updated.Error.Error()})
 		return
 	}
-	sendResponse(c, updated, http.StatusOK)
+	sendResponse(c, updated)
 }
 
 func DeleteProduct(c *gin.Context) {
@@ -74,8 +74,7 @@ func DeleteProduct(c *gin.Context) {
 		return
 
 	}
-	sendResponse(c, deleted, http.StatusOK)
-
+	sendResponse(c, deleted)
 }
 
 func bindProductFromJSON(c *gin.Context) (product_entity.Product, error) {
@@ -84,13 +83,13 @@ func bindProductFromJSON(c *gin.Context) (product_entity.Product, error) {
 	return product, err
 }
 
-func sendResponse(c *gin.Context, dbResponse *gorm.DB, status int) {
+func sendResponse(c *gin.Context, dbResponse *gorm.DB) {
 	if dbResponse.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": dbResponse.Error.Error()})
 	} else {
-		c.JSON(status, gin.H{
-			"status":  status,
-			"Product": dbResponse.Statement.Model,
+		c.JSON(http.StatusOK, gin.H{
+			"status":  http.StatusOK,
+			"Company": dbResponse.Statement.Model,
 		})
 	}
 }
