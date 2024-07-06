@@ -95,7 +95,7 @@ func sendResponse(c *gin.Context, dbResponse *gorm.DB) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  http.StatusOK,
-			"Company": dbResponse.Statement.Model,
+			"Product": dbResponse.Statement.Model,
 		})
 	}
 }

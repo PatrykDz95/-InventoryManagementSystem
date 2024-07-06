@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorsk/server/company/company_entite"
+	"gorsk/server/company/company_entity"
 	"gorsk/server/product/product_entity"
 )
 
@@ -34,7 +34,7 @@ func Init(dbName string) {
 	}
 
 	// AutoMigrate the Company struct
-	err = db.AutoMigrate(&company_entite.Company{})
+	err = db.AutoMigrate(&company_entity.Company{})
 	if err != nil {
 		panic("Failed to migrate database!")
 	}

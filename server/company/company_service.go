@@ -3,7 +3,7 @@ package company
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"gorsk/server/company/company_entite"
+	"gorsk/server/company/company_entity"
 	"gorsk/server/database"
 	"log"
 	"net/http"
@@ -27,7 +27,7 @@ func AddCompany(c *gin.Context) {
 
 func GetAllCompanies(c *gin.Context) {
 	db := database.GetDB()
-	var companies []company_entite.Company
+	var companies []company_entity.Company
 	found := db.Find(&companies)
 	if found.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
@@ -39,7 +39,7 @@ func GetAllCompanies(c *gin.Context) {
 
 func GetCompanyById(c *gin.Context) {
 	db := database.GetDB()
-	var company company_entite.Company
+	var company company_entity.Company
 	found := db.First(&company, c.Param("id"))
 	if found.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
@@ -51,7 +51,7 @@ func GetCompanyById(c *gin.Context) {
 
 func GetCompaniesWithProducts(c *gin.Context) {
 	db := database.GetDB()
-	var companies []company_entite.Company
+	var companies []company_entity.Company
 	found := db.Preload("Inventory").Find(&companies)
 	if found.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
@@ -63,7 +63,7 @@ func GetCompaniesWithProducts(c *gin.Context) {
 
 func GetCompanyByName(c *gin.Context) {
 	db := database.GetDB()
-	var company []company_entite.Company
+	var company []company_entity.Company
 	found := db.Where("name LIKE ?", "%"+c.Param("name")+"%").Find(&company)
 	if found.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
@@ -96,7 +96,7 @@ func UpdateCompany(c *gin.Context) {
 
 func DeleteCompany(c *gin.Context) {
 	db := database.GetDB()
-	var company company_entite.Company
+	var company company_entity.Company
 	result := db.First(&company, c.Param("id"))
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": result.Error.Error()})
@@ -120,8 +120,8 @@ func DeleteCompany(c *gin.Context) {
 	sendResponse(c, deleted)
 }
 
-func bindProductFromJSON(c *gin.Context) (company_entite.Company, error) {
-	company := company_entite.Company{}
+func bindProductFromJSON(c *gin.Context) (company_entity.Company, error) {
+	company := company_entity.Company{}
 	err := c.ShouldBindJSON(&company)
 	return company, err
 }

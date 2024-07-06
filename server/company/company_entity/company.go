@@ -1,4 +1,4 @@
-package company_entite
+package company_entity
 
 import (
 	"gorsk/server/product/product_entity"
