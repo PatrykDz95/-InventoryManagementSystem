@@ -6,6 +6,9 @@ import (
 	"gorm.io/gorm"
 	"gorsk/server/company/company_entity"
 	"gorsk/server/product/product_entity"
+	"gorsk/server/supplier/entity"
+	entity2 "gorsk/server/users/entity"
+	entity3 "gorsk/server/warehouse/entity"
 )
 
 var DB *gorm.DB
@@ -35,6 +38,24 @@ func Init(dbName string) {
 
 	// AutoMigrate the Company struct
 	err = db.AutoMigrate(&company_entity.Company{})
+	if err != nil {
+		panic("Failed to migrate database!")
+	}
+
+	// AutoMigrate the Supplier struct
+	err = db.AutoMigrate(&entity.Supplier{})
+	if err != nil {
+		panic("Failed to migrate database!")
+	}
+
+	// AutoMigrate the User struct
+	err = db.AutoMigrate(&entity2.User{})
+	if err != nil {
+		panic("Failed to migrate database!")
+	}
+
+	// AutoMigrate the User struct
+	err = db.AutoMigrate(&entity3.Warehouse{})
 	if err != nil {
 		panic("Failed to migrate database!")
 	}
