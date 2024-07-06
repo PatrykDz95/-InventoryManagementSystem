@@ -24,7 +24,11 @@ func main() {
 
 	v1.POST("/company", company.AddCompany)
 	v1.GET("/companies", company.GetAllCompanies)
+	v1.GET("/company/:id", company.GetCompanyById)
 	v1.GET("/companies/products", company.GetCompaniesWithProducts)
+	v1.GET("/companies/:name", company.GetCompanyByName)
+	v1.PUT("/company/:id", company.UpdateCompany)
+	v1.DELETE("/company/:id", company.DeleteCompany)
 
 	err := router.Run("localhost:8080")
 	if err != nil {

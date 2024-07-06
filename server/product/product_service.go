@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm/clause"
 	"gorsk/server/database"
 	"gorsk/server/product/product_entity"
+	"log"
 	"net/http"
 )
 
@@ -21,6 +22,7 @@ func AddProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": created.Error.Error()})
 		return
 	}
+	log.Println("Created product: ", product.Name)
 	sendResponse(c, created)
 }
 
@@ -32,6 +34,7 @@ func GetAllProducts(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
 		return
 	}
+	log.Println("Found products: ", products)
 	sendResponse(c, found)
 }
 
@@ -43,6 +46,7 @@ func GetProductById(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": found.Error.Error()})
 		return
 	}
+	log.Println("Found product by id: ", product.Name)
 	sendResponse(c, found)
 }
 
@@ -58,6 +62,7 @@ func UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"errorMessage": updated.Error.Error()})
 		return
 	}
+	log.Println("Updated product: ", product.Name)
 	sendResponse(c, updated)
 }
 
@@ -74,6 +79,7 @@ func DeleteProduct(c *gin.Context) {
 		return
 
 	}
+	log.Println("Deleted product: ", product.Name)
 	sendResponse(c, deleted)
 }
 
