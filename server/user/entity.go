@@ -1,18 +1,17 @@
 package user
 
-import "time"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+)
 
 type User struct {
-	ID           uint      `gorm:"primary_key;autoIncrement"`
-	Username     string    `gorm:"column:username"`
-	Email        string    `gorm:"column:email;unique_index"`
-	PasswordHash string    `gorm:"column:password;not null"`
-	Role         string    `gorm:"column:role"`
-	IsActive     bool      `gorm:"column:is_active"`
-	AddedDate    string    `gorm:"column:added_date"`
-	UpdatedDate  string    `gorm:"column:updated_date"`
-	Salt         string    `gorm:"column:salt"`
-	CreatedAt    time.Time `gorm:"autoCreateTime"`
-	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
-	Token        string    `gorm:"column:token"`
+	ID           primitive.ObjectID `bson:"_id,omitempty"`
+	Username     string             `bson:"username"`
+	Email        string             `bson:"email"`
+	PasswordHash string             `bson:"password"`
+	Role         string             `bson:"role"`
+	IsActive     bool               `bson:"is_active"`
+	CreatedAt    time.Time          `bson:"created_at"`
+	UpdatedAt    time.Time          `bson:"updated_at"`
 }

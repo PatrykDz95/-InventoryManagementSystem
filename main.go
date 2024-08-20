@@ -3,8 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"gorsk/server/company"
-	"gorsk/server/initDB"
+	"gorsk/server/database"
 	"gorsk/server/product"
+	"gorsk/server/user"
 )
 
 func main() {
@@ -17,11 +18,13 @@ func main() {
 	//	AllowCredentials: true,
 	//	MaxAge:           12 * time.Hour,
 	//}))
+	mongoDB := database.InitMongoDB("mongodb://localhost:27017")
 
-	db := initDB.InitDB()
-	services := initDB.InitServices(db)
+	db := database.InitDB()
+	services := database.InitServices(db, mongoDB)
 	productHandler := product.NewProductHandler(services.ProductService)
 	companyHandler := company.NewCompanyHandler(services.CompanyService)
+	userHandler := user.NewUserHandler(services.UserService)
 
 	r := gin.Default()
 	api := r.Group("/api")
@@ -37,6 +40,8 @@ func main() {
 		api.GET("/company/:id", companyHandler.GetCompanyById)
 		api.PUT("/company/:id", companyHandler.UpdateCompany)
 		api.DELETE("/company/:id", companyHandler.DeleteCompany)
+
+		api.POST("/user", userHandler.CreateUser)
 	}
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

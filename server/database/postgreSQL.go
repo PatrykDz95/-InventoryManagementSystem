@@ -1,7 +1,8 @@
-package initDB
+package database
 
 import (
 	"fmt"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorsk/server/audit_log"
@@ -30,7 +31,7 @@ func InitDB() *gorm.DB {
 	}
 	err = db.AutoMigrate(&audit_log.AuditLog{}, &category.Category{},
 		&company.Company{}, location.Location{}, &notification.Notification{},
-		&tag.Tag{}, &user.User{}, &orderItem.OrderItem{}, &product.Product{},
+		&tag.Tag{}, &orderItem.OrderItem{}, &product.Product{},
 		&product_tag.ProductTag{}, &warehouse.Warehouse{}, &supplier.Supplier{},
 		&order.Order{}, &inventory.Inventory{})
 
@@ -45,11 +46,13 @@ func InitDB() *gorm.DB {
 type Services struct {
 	CompanyService *company.Service
 	ProductService *product.Service
+	UserService    *user.Service
 }
 
-func InitServices(db *gorm.DB) *Services {
+func InitServices(db *gorm.DB, mongoDB *mongo.Database) *Services {
 	return &Services{
 		CompanyService: company.NewCompanyService(db),
 		ProductService: product.NewProductService(db),
+		UserService:    user.NewUserService(mongoDB),
 	}
 }
