@@ -13,11 +13,20 @@ func NewUserHandler(service *Service) *Handler {
 	return &Handler{Service: service}
 }
 
-func (h *Handler) CreateUser(c *gin.Context) {
+func (h *Handler) RegisterUser(c *gin.Context) {
 	user := &User{}
 	if err := c.ShouldBindJSON(user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	h.Service.Create(c, user)
+}
+
+func (h *Handler) LoginUser(c *gin.Context) {
+	user := &User{}
+	if err := c.ShouldBindJSON(user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	h.Service.Login(c, user.Email, user.PasswordHash)
 }

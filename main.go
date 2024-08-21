@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"gorsk/server/common"
 	"gorsk/server/company"
 	"gorsk/server/database"
 	"gorsk/server/product"
@@ -28,6 +29,7 @@ func main() {
 
 	r := gin.Default()
 	api := r.Group("/api")
+	api.Use(common.JWTMiddleware())
 	{
 		api.POST("/products", productHandler.AddProducts)
 		api.GET("/products", productHandler.GetAllProducts)
@@ -40,9 +42,11 @@ func main() {
 		api.GET("/company/:id", companyHandler.GetCompanyById)
 		api.PUT("/company/:id", companyHandler.UpdateCompany)
 		api.DELETE("/company/:id", companyHandler.DeleteCompany)
-
-		api.POST("/user", userHandler.CreateUser)
 	}
+
+	r.POST("/user/register", userHandler.RegisterUser)
+	r.POST("/user/login", userHandler.LoginUser)
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"gorsk/server/common"
 	"net/http"
 	"strings"
 )
@@ -20,16 +21,44 @@ func NewUserService(db *mongo.Database) *Service {
 	}
 }
 
+func (s *Service) Login(c *gin.Context, email string, password string) {
+	var user User
+	err := s.collection.FindOne(c.Request.Context(), bson.M{"email": email}).Decode(&user)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		return
+	}
+	if !common.CheckPasswordHash(password, user.PasswordHash) {
+		token, err := common.GenerateToken(user.Username)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+			return
+		}
+		c.JSON(http.StatusOK, token)
+	}
+}
+
 func (s *Service) Create(c *gin.Context, user *User) {
 	user.ID = primitive.NewObjectID()
+	hashedPassword, err := common.HashPassword(user.PasswordHash)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return
+	}
+	user.PasswordHash = hashedPassword
 	if _, err := s.collection.InsertOne(c.Request.Context(), user); err != nil {
 		errorCode := ExtractErrorCode(err)
 		if errorCode == "E11000" {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "User with this email already exists"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "User with this email already exists"})
+			return
 		}
+	}
+	token, err := common.GenerateToken(user.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusOK, token)
 }
 
 func (s *Service) GetUserByID(ctx context.Context, id string) (*User, error) {
