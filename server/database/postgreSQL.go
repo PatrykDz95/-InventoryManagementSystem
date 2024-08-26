@@ -44,15 +44,17 @@ func InitDB() *gorm.DB {
 }
 
 type Services struct {
-	CompanyService *company.Service
-	ProductService *product.Service
-	UserService    *user.Service
+	CompanyService   *company.Service
+	ProductService   *product.Service
+	InventoryService *inventory.Service
+	UserService      *user.Service
 }
 
 func InitServices(db *gorm.DB, mongoDB *mongo.Database) *Services {
 	return &Services{
-		CompanyService: company.NewCompanyService(db),
-		ProductService: product.NewProductService(db),
-		UserService:    user.NewUserService(mongoDB),
+		CompanyService:   company.NewCompanyService(db),
+		ProductService:   product.NewProductService(db),
+		InventoryService: inventory.NewInventoryService(db),
+		UserService:      user.NewUserService(mongoDB),
 	}
 }

@@ -5,8 +5,8 @@ import (
 )
 
 type AuditLog struct {
-	ID        uint `gorm:"primaryKey;autoIncrement"`
-	UserID    uint
+	ID        uint   `gorm:"primaryKey;autoIncrement"`
+	UserID    uint   `gorm:"not null"`
 	Action    string `gorm:"not null"`
 	TableName string
 	RecordID  uint

@@ -9,6 +9,7 @@ import (
 	"gorsk/server/common"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Service struct {
@@ -46,6 +47,7 @@ func (s *Service) Create(c *gin.Context, user *User) {
 		return
 	}
 	user.PasswordHash = hashedPassword
+	user.CreatedAt = time.Now()
 	if _, err := s.collection.InsertOne(c.Request.Context(), user); err != nil {
 		errorCode := ExtractErrorCode(err)
 		if errorCode == "E11000" {

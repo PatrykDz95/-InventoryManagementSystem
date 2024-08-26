@@ -20,7 +20,7 @@ func (s *Service) CreateCompany(ctx context.Context, company *Company) error {
 
 func (s *Service) GetAllCompanies(ctx context.Context) ([]Company, error) {
 	var companies []Company
-	result := s.DB.WithContext(ctx).Find(&companies)
+	result := s.DB.WithContext(ctx).Preload("Products.Category").Find(&companies)
 	return companies, result.Error
 }
 

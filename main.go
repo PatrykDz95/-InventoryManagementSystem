@@ -5,6 +5,7 @@ import (
 	"gorsk/server/common"
 	"gorsk/server/company"
 	"gorsk/server/database"
+	"gorsk/server/inventory"
 	"gorsk/server/product"
 	"gorsk/server/user"
 )
@@ -25,6 +26,8 @@ func main() {
 	services := database.InitServices(db, mongoDB)
 	productHandler := product.NewProductHandler(services.ProductService)
 	companyHandler := company.NewCompanyHandler(services.CompanyService)
+	inventoryHandler := inventory.NewInventoryHandler(services.InventoryService, productHandler)
+
 	userHandler := user.NewUserHandler(services.UserService)
 
 	r := gin.Default()
@@ -42,6 +45,8 @@ func main() {
 		api.GET("/company/:id", companyHandler.GetCompanyById)
 		api.PUT("/company/:id", companyHandler.UpdateCompany)
 		api.DELETE("/company/:id", companyHandler.DeleteCompany)
+
+		api.POST("/inventory", inventoryHandler.AddInventories)
 	}
 
 	r.POST("/user/register", userHandler.RegisterUser)
@@ -52,14 +57,6 @@ func main() {
 			"message": "pong",
 		})
 	})
-
-	//v1.POST("/company", company.AddCompany)
-	//v1.GET("/companies", company.GetAllCompanies)
-	//v1.GET("/company/:id", company.GetCompanyById)
-	//v1.GET("/companies/products", company.GetCompaniesWithProducts)
-	//v1.GET("/companies/:name", company.GetCompanyByName)
-	//v1.PUT("/company/:id", company.UpdateCompany)
-	//v1.DELETE("/company/:id", company.DeleteCompany)
 
 	err := r.Run("localhost:8080")
 	if err != nil {
